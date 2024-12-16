@@ -4,6 +4,9 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
+permissions:
+  contents: read
+
 jobs:
   labeler:
     name: Pull Request Labeler
@@ -12,7 +15,12 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/labeler@v4
+      - name: Harden Runner
+        uses: step-security/harden-runner@0080882f6c36860b6ba35c610c98ce87d4e2f26f # v2.10.2
+        with:
+          egress-policy: audit
+
+      - uses: actions/labeler@ac9175f8a1f3625fd0d4fb234536d26811351594 # v4.3.0
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           # https://github.com/actions/labeler/issues/442#issuecomment-1297359481
