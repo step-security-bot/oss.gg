@@ -17,7 +17,12 @@ jobs:
     timeout-minutes: 10
     if: github.event.action == 'opened'
     steps:
-      - uses: actions/first-interaction@v1
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
+        with:
+          egress-policy: audit
+
+      - uses: actions/first-interaction@3c71ce730280171fd1cfb57c00c774f8998586f7 # v1
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           pr-message: |-
